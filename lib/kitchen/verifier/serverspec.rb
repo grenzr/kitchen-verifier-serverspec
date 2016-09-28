@@ -36,6 +36,7 @@ module Kitchen
       default_config :default_path, '/tmp/kitchen'
       default_config :patterns, []
       default_config :gemfile, nil
+      default_config :bundler_with, nil
       default_config :custom_install_command, nil
       default_config :additional_install_command, nil
       default_config :test_serverspec_installed, true
@@ -205,7 +206,8 @@ module Kitchen
           end
           gemfile = config[:gemfile] if config[:gemfile]
           begin
-            shellout "#{bundler_local_cmd} install --gemfile=#{gemfile}"
+            bundler_with = config[:bundler_with] ? "--with='#{config[:bundler_with]}'" : ""
+            shellout "#{bundler_local_cmd} install --gemfile=#{gemfile} #{bundler_with}"
           rescue
             raise ActionFailed, 'Serverspec install failed'
           end
